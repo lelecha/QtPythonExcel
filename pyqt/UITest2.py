@@ -471,6 +471,8 @@ class Ui_MainWindow(object):
         self.tableWidget.setColumnCount(len(results[0]))
         # #表头 设置成中文
         headName = quarryDB.get_head_name(tablename)
+        for i in range(len(headName)):
+            headName[i] = constants.head_name[headName[i]]
         self.tableWidget.setHorizontalHeaderLabels(headName)
 
         for i in range(len(results)):
