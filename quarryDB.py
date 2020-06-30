@@ -8,10 +8,10 @@ def quarry_field_name(cur):
 
     num = len(sqlFields)
     fields = [None] * num
-    print(num)
+
     for i in range(num):
         print(sqlFields[i][0])
-        print(i)
+
         fields[i] = sqlFields[i][0]
 
     return fields
@@ -20,7 +20,7 @@ def quarry_field_name(cur):
 def get_head_name(tablename):
     db = sqlite3.connect('../test2.db')
     cur = db.cursor()
-    cur.execute("SELECT * FROM {tablename}".format(tablename=tablename))
+    cur.execute("SELECT * FROM '{tablename}'".format(tablename=tablename))
     sqlFields = cur.description
     num = len(sqlFields)
     fields = [None] * num
@@ -59,15 +59,15 @@ def quarbry_id(tablename, id):
 
 
 def quarry_all(tablename):
-    sql_quarry = "select * from {tablename};".format(tablename=tablename)
+    sql_quarry = "select * from '{tablename}';".format(tablename=tablename)
     try:
-        db = sqlite3.connect('test2.db')
+        db = sqlite3.connect('../test2.db')
         # db = connectDB.connect_db('localhost', 'root', 'mgq960830!', '5885ce76mb')
         cur = db.cursor()
         cur.execute(sql_quarry)
-        headName = quarry_field_name(cur)
+        # headName = quarry_field_name(cur)
         results = cur.fetchall()
-        results.insert(0, headName)
+        # results.insert(0, headName)
         print(results)
         # for row in results:
         #     id = row[0]

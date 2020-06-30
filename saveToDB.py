@@ -5,7 +5,7 @@ import xlsxOpenpyxl
 import insertDB
 import lite3.sqlite3DB
 
-
+#使用list作为输入
 def save_DB(lists, tablename):
     # try:
     # db = connectDB.connect_db('localhost', 'root', 'mgq960830!', '5885ce76mb')

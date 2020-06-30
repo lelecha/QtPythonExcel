@@ -9,9 +9,14 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import pyqtSlot
+import quarryDB
+from pyqt import constants
+
 
 
 class Ui_MainWindow(object):
+    #不要修改setup
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1133, 778)
@@ -255,21 +260,28 @@ class Ui_MainWindow(object):
         self.tabWidget = QtWidgets.QTabWidget(self.page_5)
         self.tabWidget.setTabPosition(QtWidgets.QTabWidget.South)
         self.tabWidget.setObjectName("tabWidget")
-        self.tab = QtWidgets.QWidget()
-        self.tab.setObjectName("tab")
-        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.tab)
-        self.verticalLayout_6.setObjectName("verticalLayout_6")
-        self.tableWidget = QtWidgets.QTableWidget(self.tab)
-        self.tableWidget.setObjectName("tableWidget")
-        self.tableWidget.setColumnCount(0)
-        self.tableWidget.setRowCount(0)
-        self.verticalLayout_6.addWidget(self.tableWidget)
-        self.tabWidget.addTab(self.tab, "")
-        self.tab_2 = QtWidgets.QWidget()
-        self.tab_2.setObjectName("tab_2")
-        self.tabWidget.addTab(self.tab_2, "")
+
+        # #初始化一个tab页
+        # self.tab = QtWidgets.QWidget()
+        # self.tab.setObjectName("tab")
+        # #设置成垂直排列
+        # self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.tab)
+        # self.verticalLayout_6.setObjectName("verticalLayout_6")
+        # #把table放到tab里
+        # self.tableWidget = QtWidgets.QTableWidget(self.tab)
+        # self.tableWidget.setObjectName("tableWidget")
+        # self.tableWidget.setColumnCount(0)
+        # self.tableWidget.setRowCount(0)
+        # self.verticalLayout_6.addWidget(self.tableWidget)
+        # self.tabWidget.addTab(self.tab, "")
+
+        # self.tab_2 = QtWidgets.QWidget()
+        # self.tab_2.setObjectName("tab_2")
+        # self.tabWidget.addTab(self.tab_2, "")
         self.verticalLayout_5.addWidget(self.tabWidget)
         self.stackedWidget_1.addWidget(self.page_5)
+
+
         self.page = QtWidgets.QWidget()
         self.page.setObjectName("page")
         self.stackedWidget_1.addWidget(self.page)
@@ -291,6 +303,37 @@ class Ui_MainWindow(object):
         self.stackedWidget_1.setCurrentIndex(1)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+        #监听按钮
+        self.pushButton_1.clicked.connect(self.show_page)
+        self.pushButton_2.clicked.connect(self.show_page)
+        self.pushButton_3.clicked.connect(self.show_page)
+        self.pushButton_4.clicked.connect(self.show_page)
+        self.pushButton_5.clicked.connect(self.show_page)
+
+        #监听checkbox的状态改变  先写一部分进行测试
+        self.checkBox.stateChanged.connect(self.select_text)
+        self.checkBox_2.stateChanged.connect(self.select_text)
+        self.checkBox_3.stateChanged.connect(self.select_text)
+        self.checkBox_4.stateChanged.connect(self.select_text)
+        self.checkBox_5.stateChanged.connect(self.select_text)
+
+        #默认text只读 同样先测试前五个
+        self.lineEdit_2.setReadOnly(1)
+        self.lineEdit_3.setReadOnly(1)
+        self.lineEdit.setReadOnly(1)
+        self.lineEdit_4.setReadOnly(1)
+        self.lineEdit_5.setReadOnly(1)
+
+        #提交和重置按钮
+        self.buttonBox.button(QtWidgets.QDialogButtonBox.Apply).clicked.connect(self.apply_form)
+        # self.buttonBox.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(self.reset_form)
+
+        #下拉资源单
+        self.comboBox.addItems(constants.resources)
+        self.comboBox.currentIndexChanged.connect(self.select_from_resources)
+
+        # for i in pyqt.constants.resources:
+        #     self.comboBox..connect(self.select_from_resources)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -330,5 +373,128 @@ class Ui_MainWindow(object):
         self.pushButton_10.setText(_translate("MainWindow", "导出到Excel"))
         self.label_3.setText(_translate("MainWindow", "形态表："))
         self.label_4.setText(_translate("MainWindow", "当前形态："))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Tab 1"))
-        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Tab 2"))
+
+        # self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", "Tab 1"))
+        # self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_2), _translate("MainWindow", "Tab 2"))
+    #切换页面
+    def show_page(self):
+        dic = {
+            "pushButton_1": 1,
+            "pushButton_2": 0,
+            "pushButton_3": 2,
+            "pushButton_4": 3,
+            "pushButton_5": 4
+        }
+        index = dic[self.stackedWidget_1.sender().objectName()]
+        self.stackedWidget_1.setCurrentIndex(index)
+
+    #根据checkbox解锁text输入
+    def select_text(self):
+        dic = {
+            "checkBox": self.lineEdit_2,
+            "checkBox_2": self.lineEdit_3,
+            "checkBox_3": self.lineEdit,
+            "checkBox_4": self.lineEdit_4,
+            "checkBox_5": self.lineEdit_5,
+
+        }
+        index = dic[self.stackedWidget_1.sender().objectName()]
+        print(self.lineEdit_2.text() == '')
+
+        if self.stackedWidget_1.sender().isChecked():
+            index.setReadOnly(0)
+        else:
+            index.setReadOnly(1)
+    #提交查询表单 试用 先提交两个
+    def apply_form(self):
+        list = []
+        #插入三个数据
+        list.append(self.lineEdit_2.text())
+        list.append(self.lineEdit_3.text())
+        list.append(self.lineEdit.text())
+        print(list)
+        result = quarryDB.quarry_search(list[0],list[1],list[2]) # 搜索结果
+        # 贴到table上
+        self.tableWidget_2.setRowCount(len(result))
+        self.tableWidget_2.setColumnCount(len(result[0]))
+        #表头
+        headName = quarryDB.get_head_name('test')
+        print(headName)
+        self.tableWidget_2.setHorizontalHeaderLabels(headName)
+
+        for i in range(len(result)):
+            for j in range(len(result[0])):
+                self.tableWidget_2.setItem(i, j, QTableWidgetItem(result[i][j]))
+
+
+
+
+
+    # def show_data_table(self, data):
+    #     self.tableWidget_2.setRowCount()
+
+
+    #重置表单
+    # def reset_form(self):
+
+    #从下拉栏中选择形态表
+    def select_from_resources(self):
+        resource = self.stackedWidget_1.sender().currentText()
+        resource_list = constants.resources_dic[resource] #获得一串 tablename
+
+        for i in resource_list:
+            print(i)
+            results = quarryDB.quarry_all(i) #查询一个table返回所有搜索结果
+            self.browse_form(i,results)
+
+
+    def browse_form(self, tablename, results):
+        #初始化一个tab页
+        self.tab = QtWidgets.QWidget()
+        self.tab.setObjectName("tab")
+        # 设置成垂直排列
+        self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.tab)
+        self.verticalLayout_6.setObjectName("verticalLayout_6")
+        # 把table放到tab里
+        self.tableWidget = QtWidgets.QTableWidget(self.tab)
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setRowCount(0)
+        self.verticalLayout_6.addWidget(self.tableWidget)
+        self.tabWidget.addTab(self.tab, "")
+        _translate = QtCore.QCoreApplication.translate
+        self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab), _translate("MainWindow", tablename))
+
+
+        # # 贴到table上
+        self.tableWidget.setRowCount(len(results))
+        self.tableWidget.setColumnCount(len(results[0]))
+        # #表头 设置成中文
+        headName = quarryDB.get_head_name(tablename)
+        self.tableWidget.setHorizontalHeaderLabels(headName)
+
+        for i in range(len(results)):
+            for j in range(len(results[0])):
+                self.tableWidget.setItem(i, j, QTableWidgetItem(results[i][j]))
+
+
+
+
+
+
+
+
+
+import sys
+
+
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableWidgetItem
+
+if __name__ == '__main__':
+
+    app = QApplication(sys.argv)
+    mainWindow = QMainWindow()
+    ui = Ui_MainWindow()
+    ui.setupUi(mainWindow)
+    mainWindow.show()
+    sys.exit(app.exec_())

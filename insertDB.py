@@ -4,17 +4,18 @@ import lite3.sqlite3DB
 import sqlite3
 
 
-def insert_db(tablename, id, name, bit, numK
-              , tidW, tidN, subTidW, subTidN, sTypeW_bit, sType, storeLocation, algoId, algoSpe,
+def insert_db(tablename, algo, name, bit, numK
+              , tidW, tidN, subTidW, subTidN, sTypeW_bit, sType, storeLocation, algoId, ISSU,algoSpe,
               testSpe, castType, iOrd,
               TBLM_ID, dpt, dpt_person, confirmation):
 
-    sql_insert = "insert into test (id, name, bit, numK, tidW, tidN, subTidW, subTidN, sTypeW_bit, sType, " \
-                 "storeLocation, algoId,algoSpe, testSpe, " \
+    sql_insert = "insert into '{tablename}' (id, algo, name, bit, numK, tidW, tidN, subTidW, subTidN, sTypeW_bit, sType, " \
+                 "storeLocation, algoId,ISSU,algoSpe, testSpe, " \
                  "castType, iOrd, TBLM_ID, dpt, dpt_person, confirmation) " \
-                 "values ( NULL,'{name}', '{bit}', '{numK}', '{tidW}', '{tidN}', '{subTidW}', " \
-                 "'{subTidN}', '{sTypeW_bit}', '{sType}', '{storeLocation}', '{algoId}','{algoSpe}','{testSpe}', " \
-                 "'{castType}', '{iOrd}', '{TBLM_ID}', '{dpt}', '{dpt_person}', '{confirmation}');".format(
+                 "values ( NULL,'{algo}','{name}', '{bit}', '{numK}', '{tidW}', '{tidN}', '{subTidW}', " \
+                 "'{subTidN}', '{sTypeW_bit}', '{sType}', '{storeLocation}', '{algoId}','{ISSU}','{algoSpe}','{testSpe}', " \
+                 "'{castType}', '{iOrd}', '{TBLM_ID}', '{dpt}', '{dpt_person}', '{confirmation}');".format(tablename=tablename,
+                                                                                                           algo=algo,
                                                                                                            name=name,
                                                                                                            bit=bit,
                                                                                                            numK=numK
@@ -26,6 +27,7 @@ def insert_db(tablename, id, name, bit, numK
                                                                                                            sType=sType,
                                                                                                            storeLocation=storeLocation,
                                                                                                            algoId=algoId,
+                                                                                                           ISSU = ISSU,
                                                                                                            algoSpe=algoSpe,
                                                                                                            testSpe=testSpe,
                                                                                                            castType=castType,

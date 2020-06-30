@@ -6,9 +6,9 @@ import deleteDB
 import saveToDB
 import createDB
 import lite3.sqlite3DB
-
+import insertDB
 def main():
-   # print os.getcwd()
+
    # insertDB.insert_db('blogs','2','22','tom')
    # #全表 并插入excel
    # result = quarryDB.quarry_all('test')
@@ -26,7 +26,29 @@ def main():
    # lists = xlsxOpenpyxl.read_excel_xlsx('test4.xlsx','Sheet1')
    #
    # saveToDB.save_DB(lists, 'test')
-   quarryDB.quarry_search('','','')
+
+   #形态表cx6600 初始化 不会再用上
+   # lite3.sqlite3DB.create_table("LPUI2T(5886)")
+   # lite3.sqlite3DB.create_table("1TCB(5886)")
+   # lite3.sqlite3DB.create_table("2TF&4TA(5886)")
+
+   #向cx6600 插入数据
+    # insertDB.insert_db('LPUI2T(5886)','5886 CE(76MB)','灵活QinQ','160','0','4','0','4','0','8/96','0','片内算法','0','8','192','192','单播','index','N/A','N/A','N/A','N/A')
+    # insertDB.insert_db('LPUI2T(5886)','5886 CE(76MB)','VRRP','160','4','4','0','4','0','8/96','1','片内算法','0','8','192','192','单播','index','FEI_TBL_VRRP','N/A','N/A','OK')
+    # insertDB.insert_db('LPUI2T(5886)','5886 CE(76MB)','Y1731_PW','160','5','4','0','4','1','8/32','0','片内算法','0','8','192','192','单播','index','N/A','南京业务','lizhi 00182464','N/A')
+    # insertDB.insert_db('LPUI2T(5886)','5886 CE(76MB)','TP_OAM_ESEND','160','0','4','0','4','1','8/32','1','片内算法','0','8','192','192','单播','index','N/A','N/A','N/A','N/A')
+    # insertDB.insert_db('LPUI2T(5886)','5886 CE(76MB)','MPLS OAM接收表','160','0','4','0','4','1','8/32','2','片内算法','0','8','192','192','单播','index','N/A','N/A','N/A','N/A')
+
+    # insertDB.insert_db('2TF&4TA(5886)','5886 CE(76MB)','灵活QinQ','160','0','4','0','4','0','8/96','0','片内算法','0','8','192','192','单播','index','N/A','N/A','N/A','N/A')
+    # insertDB.insert_db('2TF&4TA(5886)','5886 CE(76MB)','VRRP','160','4','4','0','4','0','8/96','1','片内算法','0','8','192','192','单播','index','FEI_TBL_VRRP','N/A','N/A','OK')
+    # insertDB.insert_db('2TF&4TA(5886)','5886 CE(76MB)','Y1731_PW','160','5','4','0','4','1','8/32','0','片内算法','0','8','192','192','单播','index','N/A','南京业务','lizhi 00182464','N/A')
+    # insertDB.insert_db('2TF&4TA(5886)','5886 CE(76MB)','TP_OAM_ESEND','160','0','4','0','4','1','8/32','1','片内算法','0','8','192','192','单播','index','N/A','N/A','N/A','N/A')
+    # insertDB.insert_db('2TF&4TA(5886)','5886 CE(76MB)','MPLS OAM接收表','160','0','4','0','4','1','8/32','2','片内算法','0','8','192','192','单播','index','N/A','N/A','N/A','N/A')
+    #
+    # insertDB.insert_db('1TCB(5885)','5886 CE(76MB)','灵活QinQ','160','0','4','0','4','0','8/96','0','片内算法','0','N/A','160','160','单播','index','N/A','N/A','N/A','N/A')
+    # insertDB.insert_db('1TCB(5885)','5886 CE(76MB)','Y1731_PW','160','5','4','0','4','1','8/32','0','片内算法','0','N/A','160','160','单播','index','N/A','南京业务','lizhi 00182464','N/A')
+    # insertDB.insert_db('1TCB(5885)','5886 CE(76MB)','TP_OAM_ESEND','160','0','4','0','4','1','8/32','1','片内算法','0','N/A','160','160','单播','index','N/A','N/A','N/A','N/A')
+    # insertDB.insert_db('1TCB(5885)','5886 CE(76MB)','MPLS OAM接收表','160','0','4','0','4','1','8/32','2','片内算法','0','N/A','160','160','单播','index','N/A','N/A','N/A','N/A')
 
 if __name__ == '__main__':
     main()

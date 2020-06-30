@@ -1,6 +1,6 @@
 import pymysql
 
-def create_table(tablename):
+def create_tale(tablename):
     try:
 
         con = pymysql.connect(host='localhost', user='root',
