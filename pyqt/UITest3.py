@@ -453,13 +453,13 @@ class Ui_MainWindow(object):
 
         self.treeWidget = QtWidgets.QTreeWidget(self.page_4)
         self.treeWidget.setObjectName("treeWidget")
-        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-        item_0.setCheckState(0, QtCore.Qt.Unchecked)
-
-        item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        item_1.setCheckState(0, QtCore.Qt.Unchecked)
-        item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        item_1.setCheckState(0, QtCore.Qt.Unchecked)
+        # item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
+        # item_0.setCheckState(0, QtCore.Qt.Unchecked)
+        #
+        # item_1 = QtWidgets.QTreeWidgetItem(item_0)
+        # item_1.setCheckState(0, QtCore.Qt.Unchecked)
+        # item_1 = QtWidgets.QTreeWidgetItem(item_0)
+        # item_1.setCheckState(0, QtCore.Qt.Unchecked)
 
         self.horizontalLayout_3.addWidget(self.treeWidget)
         self.listWidget = QtWidgets.QListWidget(self.page_4)
@@ -546,8 +546,23 @@ class Ui_MainWindow(object):
         self.comboBox.addItems(constants.resources)
         self.comboBox.currentIndexChanged.connect(self.select_from_resources)
 
+
         # for i in pyqt.constants.resources:
         #     self.comboBox..connect(self.select_from_resources)
+
+        #从constants初始化tree下拉表单（状态表）
+        for i in range(len(constants.resources)):
+            if i == 0: #跳过第一条 也就是“形态表”
+                continue
+            root = self.add_root(constants.resources[i])
+            #从constants初始化tree 下拉表单的子表（单板）
+
+            # print(constants.resources_dic[constants.resources(i)])
+            # print(len(constants.resources_dic[constants.resources(i)]))
+            # for j in range(len(constants.resources_dic[constants.resources(i)])):
+            #     self.add_child(constants.resources_dic[constants.resources(i)][j],j,root)
+
+
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -619,9 +634,9 @@ class Ui_MainWindow(object):
         self.treeWidget.headerItem().setText(0, _translate("MainWindow", "形态表"))
         __sortingEnabled = self.treeWidget.isSortingEnabled()
         self.treeWidget.setSortingEnabled(False)
-        self.treeWidget.topLevelItem(0).setText(0, _translate("MainWindow", "表1"))
-        self.treeWidget.topLevelItem(0).child(0).setText(0, _translate("MainWindow", "单板1"))
-        self.treeWidget.topLevelItem(0).child(1).setText(0, _translate("MainWindow", "单板2"))
+        # self.treeWidget.topLevelItem(0).setText(0, _translate("MainWindow", "表1"))
+        # self.treeWidget.topLevelItem(0).child(0).setText(0, _translate("MainWindow", "单板1"))
+        # self.treeWidget.topLevelItem(0).child(1).setText(0, _translate("MainWindow", "单板2"))
         self.treeWidget.setSortingEnabled(__sortingEnabled)
         __sortingEnabled = self.listWidget.isSortingEnabled()
         self.listWidget.setSortingEnabled(False)
@@ -770,6 +785,25 @@ class Ui_MainWindow(object):
             if flag1[0] == 0 or flag2:
                 for i in range(item.childCount()):
                     item.child(i).setCheckState(col,QtCore.Qt.Unchecked)
+    #增加单板选择表中的父节点， 也就是形态表
+    def add_root(self, name):
+        _translate = QtCore.QCoreApplication.translate
+        # self.treeWidget = QtWidgets.QTreeWidget(self.page_4)
+        # self.treeWidget.setObjectName("treeWidget")
+        item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
+        item_0.setCheckState(0, QtCore.Qt.Unchecked)
+        self.treeWidget.topLevelItem(self.treeWidget.topLevelItemCount() - 1).setText(0, _translate("MainWindow", name))
+        # item_1 = QtWidgets.QTreeWidgetItem(item_0)
+        # item_1.setCheckState(0, QtCore.Qt.Unchecked)
+        # item_1 = QtWidgets.QTreeWidgetItem(item_0)
+        # item_1.setCheckState(0, QtCore.Qt.Unchecked)
+        return item_0
+
+    def add_child(self, name, index, root):
+        _translate = QtCore.QCoreApplication.translate
+        item_1 = QtWidgets.QTreeWidgetItem(root)
+        item_1.setCheckState(0, QtCore.Qt.Unchecked)
+        self.treeWidget.topLevelItem(self.treeWidget.topLevelItemCount() - 1).child(index).setText(0, _translate("MainWindow", name))
 
 #必须加入的
 import sys
