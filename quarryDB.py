@@ -59,7 +59,7 @@ def quarbry_id(tablename, id):
 
 
 def quarry_all(tablename):
-    sql_quarry = "select * from '{tablename}';".format(tablename=tablename)
+    sql_quarry = "select * from '{tablename}' order by algoId, subTidN;".format(tablename=tablename)
     try:
         db = sqlite3.connect('../test2.db')
         # db = connectDB.connect_db('localhost', 'root', 'mgq960830!', '5885ce76mb')
@@ -128,8 +128,8 @@ def quarry_all(tablename):
 #     print(results)
 #     return results
 
-def quarry_search(tablename, algo, name, bit, numK
-                  , tidW, tidN, subTidW, subTidN, sTypeW_bit, sType, storeLocation, algoId, ISSU, algoSpe,
+def quarry_search(tablename, algo, name, algoId, subTidN, bit, numK
+                  , tidW, tidN, subTidW, sTypeW_bit, sType, storeLocation, ISSU, algoSpe,
                   testSpe, castType, iOrd,
                   TBLM_ID, dpt, dpt_person, confirmation):
     list = [None] * 21
@@ -146,65 +146,65 @@ def quarry_search(tablename, algo, name, bit, numK
     else:
         list[1] = 'name'
 
-    if bit == 'N/A' or bit == '':
-        list[2] = '1'
-        bit = '1'
-    else:
-        list[2] = 'bit'
-
-    if numK == 'N/A' or numK == '':
-        list[3] = '1'
-        numK = '1'
-    else:
-        list[3] = 'numK'
-
-    if tidW == 'N/A' or tidW == '':
-        list[4] = '1'
-        tidW = '1'
-    else:
-        list[4] = 'tidW'
-
-    if tidN == 'N/A' or tidN == '':
-        list[5] = '1'
-        tidN = '1'
-    else:
-        list[5] = 'tidN'
-
-    if subTidW == 'N/A' or subTidW == '':
-        list[6] = '1'
-        subTidW = '1'
-    else:
-        list[6] = 'subTidW'
-
-    if subTidN == 'N/A' or subTidN == '':
-        list[7] = '1'
-        subTidN = '1'
-    else:
-        list[7] = 'subTidN'
-
-    if sTypeW_bit == 'N/A' or sTypeW_bit == '':
-        list[8] = '1'
-        sTypeW_bit = '1'
-    else:
-        list[8] = 'sTypeW_bit'
-
-    if sType == 'N/A' or sType == '':
-        list[9] = '1'
-        sType = '1'
-    else:
-        list[9] = 'sType'
-
-    if storeLocation == 'N/A' or storeLocation == '':
-        list[10] = '1'
-        storeLocation = '1'
-    else:
-        list[10] = 'storeLocation'
-
     if algoId == 'N/A' or algoId == '':
-        list[11] = '1'
+        list[2] = '1'
         algoId = '1'
     else:
-        list[11] = 'algoId'
+        list[2] = 'algoId'
+
+    if numK == 'N/A' or numK == '':
+        list[5] = '1'
+        numK = '1'
+    else:
+        list[5] = 'numK'
+
+    if tidW == 'N/A' or tidW == '':
+        list[6] = '1'
+        tidW = '1'
+    else:
+        list[6] = 'tidW'
+
+    if tidN == 'N/A' or tidN == '':
+        list[7] = '1'
+        tidN = '1'
+    else:
+        list[7] = 'tidN'
+
+    if subTidW == 'N/A' or subTidW == '':
+        list[8] = '1'
+        subTidW = '1'
+    else:
+        list[8] = 'subTidW'
+
+    if subTidN == 'N/A' or subTidN == '':
+        list[3] = '1'
+        subTidN = '1'
+    else:
+        list[3] = 'subTidN'
+
+    if sTypeW_bit == 'N/A' or sTypeW_bit == '':
+        list[9] = '1'
+        sTypeW_bit = '1'
+    else:
+        list[9] = 'sTypeW_bit'
+
+    if sType == 'N/A' or sType == '':
+        list[10] = '1'
+        sType = '1'
+    else:
+        list[10] = 'sType'
+
+    if storeLocation == 'N/A' or storeLocation == '':
+        list[11] = '1'
+        storeLocation = '1'
+    else:
+        list[11] = 'storeLocation'
+
+    if bit == 'N/A' or bit == '':
+        list[4] = '1'
+        bit = '1'
+    else:
+        list[4] = 'bit'
 
     if ISSU == 'N/A' or ISSU == '':
         list[12] = '1'
@@ -262,35 +262,35 @@ def quarry_search(tablename, algo, name, bit, numK
         list[20] = 'confirmation'
 
 
-    sql_search = "select * from '{tablename}' where {algo} = {algo_} and {name} = {name_} and {bit} = {bit_}" \
+    sql_search = "select * from '{tablename}' where {algo} = {algo_} and {name} = {name_} and {algoId} = {algoId_} and {subTidN} = {subTidN_} and {bit} = {bit_}" \
                  " and {numK} = {numK_} and {tidW} = {tidW_} and {tidN} = {tidN_} and {subTidW} = {subTidW_}" \
-                 " and {subTidN} = {subTidN_} and {sTypeW_bit} = {sTypeW_bit_} and {sType} = {sType_} and {storeLocation} = {storeLocation_}" \
-                 " and {algoId} = {algoId_} and {ISSU} = {ISSU_} and {algoSpe} = {algoSpe_} and {testSpe} = {testSpe_}" \
+                 " and {sTypeW_bit} = {sTypeW_bit_} and {sType} = {sType_} and {storeLocation} = {storeLocation_}" \
+                 " and {ISSU} = {ISSU_} and {algoSpe} = {algoSpe_} and {testSpe} = {testSpe_}" \
                  " and {castType} = {castType_} and {iOrd} = {iOrd_} and {TBLM_ID} = {TBLM_ID_} and {dpt} = {dpt_}" \
-                 " and {dpt_person} = {dpt_person_} and {confirmation} = {confirmation_}".format(tablename=tablename,
+                 " and {dpt_person} = {dpt_person_} and {confirmation} = {confirmation_} order by algoId, subTidN".format(tablename=tablename,
                                                                                                  algo=list[0],
                                                                                                  algo_=algo,
                                                                                                  name=list[1],
                                                                                                  name_=name,
-                                                                                                 bit=list[2],
+                                                                                                 bit=list[4],
                                                                                                  bit_=bit,
-                                                                                                 numK=list[3],
+                                                                                                 numK=list[5],
                                                                                                  numK_=numK,
-                                                                                                 tidW=list[4],
+                                                                                                 tidW=list[6],
                                                                                                  tidW_=tidW,
-                                                                                                 tidN=list[5],
+                                                                                                 tidN=list[7],
                                                                                                  tidN_=tidN,
-                                                                                                 subTidW=list[6],
+                                                                                                 subTidW=list[8],
                                                                                                  subTidW_=subTidW,
-                                                                                                 subTidN=list[7],
+                                                                                                 subTidN=list[3],
                                                                                                  subTidN_=subTidN,
-                                                                                                 sTypeW_bit=list[8],
+                                                                                                 sTypeW_bit=list[9],
                                                                                                  sTypeW_bit_=sTypeW_bit,
-                                                                                                 sType=list[9],
+                                                                                                 sType=list[10],
                                                                                                  sType_=sType,
-                                                                                                 storeLocation=list[10],
+                                                                                                 storeLocation=list[11],
                                                                                                  storeLocation_=storeLocation,
-                                                                                                 algoId=list[11],
+                                                                                                 algoId=list[2],
                                                                                                  algoId_=algoId,
                                                                                                  ISSU=list[12],
                                                                                                  ISSU_=ISSU,
@@ -311,19 +311,21 @@ def quarry_search(tablename, algo, name, bit, numK
                                                                                                  confirmation=list[20],
                                                                                                  confirmation_=confirmation
                                                                                                  )
-    print(sql_search)
-    db = sqlite3.connect('../test2.db')
-    cur_search = db.cursor()
-    cur_search.execute(sql_search)
-    results = cur_search.fetchall()
-    print(cur_search.fetchall())
-    db.commit()
+    try:
+        print(sql_search)
+        db = sqlite3.connect('../test2.db')
+        cur_search = db.cursor()
+        cur_search.execute(sql_search)
+        results = cur_search.fetchall()
+        print(cur_search.fetchall())
+        db.commit()
 
-    print('success search')
-    # except Exception as e:
-    #     db.rollback()
-    #     print('rollback')
-    # finally:
-    db.close()
-    return results
+        print('success search')
+        return results
+    except Exception as e:
+        # db.rollback()
+        print('rollback')
+    finally:
+        db.close()
+
 

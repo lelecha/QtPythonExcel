@@ -10,11 +10,13 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtGui import QColor, QBrush
+from PyQt5.QtWidgets import QTableWidget
 
 import quarryDB
 from pyqt import constants
 import insertDB
-
+import deleteDB
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -283,22 +285,33 @@ class Ui_MainWindow(object):
         self.page = QtWidgets.QWidget()
         self.page.setObjectName("page")
         self.stackedWidget_1.addWidget(self.page)
+
+        #CURD 页layout
+
         self.page_4 = QtWidgets.QWidget()
         self.page_4.setObjectName("page_4")
         self.verticalLayout_13 = QtWidgets.QVBoxLayout(self.page_4)
         self.verticalLayout_13.setObjectName("verticalLayout_13")
+        # self.verticalLayout_13.setStretch(0, 1)
+        # self.verticalLayout_13.setStretch(1, 1)
+        # self.verticalLayout_13.setStretch(2, 4)
+
         self.horizontalLayout_5 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_5.setObjectName("horizontalLayout_5")
+
+        #单板 框布局
         self.verticalLayout_7 = QtWidgets.QVBoxLayout()
         self.verticalLayout_7.setSizeConstraint(QtWidgets.QLayout.SetFixedSize)
         self.verticalLayout_7.setObjectName("verticalLayout_7")
+
+
         self.label_31 = QtWidgets.QLabel(self.page_4)
         self.label_31.setMinimumSize(QtCore.QSize(0, 12))
         self.label_31.setMaximumSize(QtCore.QSize(300, 12))
         self.label_31.setObjectName("label_31")
         self.verticalLayout_7.addWidget(self.label_31)
         self.treeWidget = QtWidgets.QTreeWidget(self.page_4)
-        self.treeWidget.setMaximumSize(QtCore.QSize(300, 16777215))
+        # self.treeWidget.setMaximumSize(QtCore.QSize(300, 200))
         self.treeWidget.setObjectName("treeWidget")
         # item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
         # item_0.setCheckState(0, QtCore.Qt.Unchecked)
@@ -307,6 +320,9 @@ class Ui_MainWindow(object):
         # item_1 = QtWidgets.QTreeWidgetItem(item_0)
         # item_1.setCheckState(0, QtCore.Qt.Unchecked)
         self.verticalLayout_7.addWidget(self.treeWidget)
+
+
+
         self.horizontalLayout_5.addLayout(self.verticalLayout_7)
         self.verticalLayout_8 = QtWidgets.QVBoxLayout()
         self.verticalLayout_8.setObjectName("verticalLayout_8")
@@ -389,11 +405,15 @@ class Ui_MainWindow(object):
         self.label_5 = QtWidgets.QLabel(self.page_4)
         self.label_5.setObjectName("label_5")
         self.verticalLayout_10.addWidget(self.label_5)
+
+        #搜索结果layout
         self.tableWidget_4 = QtWidgets.QTableWidget(self.page_4)
-        self.tableWidget_4.setMinimumSize(QtCore.QSize(0, 400))
+
         self.tableWidget_4.setObjectName("tableWidget_4")
         self.tableWidget_4.setColumnCount(0)
         self.tableWidget_4.setRowCount(0)
+
+
         self.verticalLayout_10.addWidget(self.tableWidget_4)
         self.horizontalLayout_4.addLayout(self.verticalLayout_10)
         self.verticalLayout_12 = QtWidgets.QVBoxLayout()
@@ -419,8 +439,14 @@ class Ui_MainWindow(object):
         self.verticalLayout_12.addWidget(self.pushButton_7)
         self.horizontalLayout_4.addLayout(self.verticalLayout_12)
         self.verticalLayout_13.addLayout(self.horizontalLayout_4)
+
+
         self.stackedWidget_1.addWidget(self.page_4)
         self.horizontalLayout.addWidget(self.stackedWidget_1)
+        #s
+
+        # self.horizontalLayout.setStretch(1,7)
+
         self.verticalLayout_4.addLayout(self.horizontalLayout)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -487,6 +513,14 @@ class Ui_MainWindow(object):
 
         #搜索键监听
         self.pushButton_6.clicked.connect(self.search)
+
+        #设置CURD界面比例layout
+        self.verticalLayout_13.setStretch(0, 2)
+        self.verticalLayout_13.setStretch(1, 1)
+        self.verticalLayout_13.setStretch(2, 10)
+
+        #注册删除按钮
+        self.pushButton_8.clicked.connect(self.delete)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -746,7 +780,7 @@ class Ui_MainWindow(object):
 
         form = []
         for i in range(len(constants.head_name_cn)):
-            if self.tableWidget_3.item(0,i) != None:
+            if self.tableWidget_3.item(0,i) != None and self.tableWidget_3.item(0,i) != '':
                 text = self.tableWidget_3.item(0,i).text()
                 print(text)
 
@@ -756,7 +790,7 @@ class Ui_MainWindow(object):
                 form.append('N/A')
 
 
-        results = []
+
 
         for i in self.selected_hardware:
             print(i, form)
@@ -769,26 +803,60 @@ class Ui_MainWindow(object):
         # self.show_search_results(results)
 
     def show_search_results(self, results,tablename):
-        preRow = self.tableWidget_4.rowCount()
-        self.tableWidget_4.setRowCount(preRow + len(results))
-        self.tableWidget_4.setColumnCount(len(results[0]))
-        # 表头
-        self.tableWidget_4.setHorizontalHeaderLabels(constants.head_name_search)
-        for i in range(len(results)):
-            for j in range(len(results[0])):
-                print("当前列")
-                print(j)
-                print(results[i][j])
-                self.tableWidget_4.setItem(i + preRow, j, QTableWidgetItem(results[i][j]))
-                if j == 0:
-                    self.tableWidget_4.setItem(i + preRow, j, QTableWidgetItem(tablename))
+        try:
+            preRow = self.tableWidget_4.rowCount()
+            self.tableWidget_4.setRowCount(preRow + len(results))
+            self.tableWidget_4.setColumnCount(len(results[0]))
+            # 表头
+            self.tableWidget_4.setHorizontalHeaderLabels(constants.head_name_search)
+            for i in range(len(results)):
+                for j in range(len(results[0])):
+                    print("当前列")
+                    print(j)
+                    print(results[i][j])
+                    self.tableWidget_4.setItem(i + preRow, j, QTableWidgetItem(results[i][j]))
+                    if j == 0:
+                        self.tableWidget_4.setItem(i + preRow, j, QTableWidgetItem(tablename))
+            # 搜索结果框自适应
+            self.tableWidget_4.horizontalHeader().setSectionResizeMode(0, QHeaderView.ResizeToContents)
+
+            # self.tableWidget_4.item(1,3).setBackground(QBrush(QColor(60,179,113)))
+            self.rander_table_background(self.tableWidget_4)
+
+
+        except Exception as e:
+            print("results is empty")
+    def rander_table_background(self, table):
+        for i in range(table.rowCount()):
+            if table.item(i,3).text() != 'N/A':
+                num = int(table.item(i,3).text()) + 1
+
+                table.item(i,3).setBackground(QBrush(QColor(num*111%255,num*99%255,120)))
+
+            if table.item(i,4).text() != 'N/A':
+                num = int(table.item(i, 4).text()) + 1
+                table.item(i, 4).setBackground(QBrush(QColor(num * 130 % 255, num * 120 % 255, 120)))
+
+
+    def delete(self):
+        form = []
+        for i in range(self.tableWidget_4.rowCount()):
+            if self.tableWidget_4.item(i,0).isSelected():
+                for j in range(self.tableWidget_4.columnCount()):
+                    form.append(self.tableWidget_4.item(i,j).text())
+        deleteDB.delete( form[0], form[1], form[2], form[3], form[4], form[5], form[6], form[7],
+                           form[8], form[9], form[10]
+                           , form[11], form[12], form[13], form[14], form[15], form[16], form[17], form[18],
+                           form[19], form[20],form[21])
+
+
 
 
 #必须加入的
 import sys
 
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QLineEdit, QMessageBox
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QLineEdit, QMessageBox, QHeaderView
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
