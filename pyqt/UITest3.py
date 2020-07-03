@@ -12,6 +12,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 import quarryDB
 from pyqt import constants
+import insertDB
 
 
 class Ui_MainWindow(object):
@@ -259,19 +260,7 @@ class Ui_MainWindow(object):
         self.tabWidget.setTabPosition(QtWidgets.QTabWidget.South)
         self.tabWidget.setObjectName("tabWidget")
 
-        # self.tab = QtWidgets.QWidget()
-        # self.tab.setObjectName("tab")
-        # self.verticalLayout_6 = QtWidgets.QVBoxLayout(self.tab)
-        # self.verticalLayout_6.setObjectName("verticalLayout_6")
-        # self.tableWidget = QtWidgets.QTableWidget(self.tab)
-        # self.tableWidget.setObjectName("tableWidget")
-        # self.tableWidget.setColumnCount(0)
-        # self.tableWidget.setRowCount(0)
-        # self.verticalLayout_6.addWidget(self.tableWidget)
-        # self.tabWidget.addTab(self.tab, "")
-        # self.tab_2 = QtWidgets.QWidget()
-        # self.tab_2.setObjectName("tab_2")
-        # self.tabWidget.addTab(self.tab_2, "")
+
 
         self.verticalLayout_5.addWidget(self.tabWidget)
         self.stackedWidget_1.addWidget(self.page_5)
@@ -453,13 +442,7 @@ class Ui_MainWindow(object):
 
         self.treeWidget = QtWidgets.QTreeWidget(self.page_4)
         self.treeWidget.setObjectName("treeWidget")
-        # item_0 = QtWidgets.QTreeWidgetItem(self.treeWidget)
-        # item_0.setCheckState(0, QtCore.Qt.Unchecked)
-        #
-        # item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        # item_1.setCheckState(0, QtCore.Qt.Unchecked)
-        # item_1 = QtWidgets.QTreeWidgetItem(item_0)
-        # item_1.setCheckState(0, QtCore.Qt.Unchecked)
+
 
         self.horizontalLayout_3.addWidget(self.treeWidget)
         self.listWidget = QtWidgets.QListWidget(self.page_4)
@@ -471,21 +454,28 @@ class Ui_MainWindow(object):
         self.label_32 = QtWidgets.QLabel(self.page_4)
         self.label_32.setObjectName("label_32")
         self.verticalLayout_7.addWidget(self.label_32)
+
+        #初始化提交界面的table
         self.tableWidget_3 = QtWidgets.QTableWidget(self.page_4)
         self.tableWidget_3.setObjectName("tableWidget_3")
-        self.tableWidget_3.setColumnCount(0)
-        self.tableWidget_3.setRowCount(0)
+        self.tableWidget_3.setColumnCount(len(constants.head_name_cn))
+        self.tableWidget_3.setRowCount(1)
+        self.tableWidget_3.setHorizontalHeaderLabels(constants.head_name_cn)
         self.verticalLayout_7.addWidget(self.tableWidget_3)
+
         self.horizontalLayout_4 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
         self.widget = QtWidgets.QWidget(self.page_4)
         self.widget.setObjectName("widget")
         self.horizontalLayout_4.addWidget(self.widget)
+
+        #提交键
         self.pushButton = QtWidgets.QPushButton(self.page_4)
         self.pushButton.setMinimumSize(QtCore.QSize(0, 30))
         self.pushButton.setMaximumSize(QtCore.QSize(100, 16777215))
         self.pushButton.setObjectName("pushButton")
         self.horizontalLayout_4.addWidget(self.pushButton)
+
         self.verticalLayout_7.addLayout(self.horizontalLayout_4)
         self.label_33 = QtWidgets.QLabel(self.page_4)
         self.label_33.setObjectName("label_33")
@@ -513,6 +503,8 @@ class Ui_MainWindow(object):
         self.comboBox.setCurrentIndex(-1)
         self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
+
+# 注册信号槽
 
         #treewidget
         self.treeWidget.itemChanged.connect(self.check_item)
@@ -542,13 +534,14 @@ class Ui_MainWindow(object):
         self.buttonBox.button(QtWidgets.QDialogButtonBox.Apply).clicked.connect(self.apply_form)
         # self.buttonBox.button(QtWidgets.QDialogButtonBox.Reset).clicked.connect(self.reset_form)
 
-        #下拉资源单
+        #批量插入表下拉资源单监听
         self.comboBox.addItems(constants.resources)
         self.comboBox.currentIndexChanged.connect(self.select_from_resources)
+        self.selected_hardware = []
 
 
-        # for i in pyqt.constants.resources:
-        #     self.comboBox..connect(self.select_from_resources)
+
+
 
         #从constants初始化tree下拉表单（状态表）
         for i in range(len(constants.resources)):
@@ -556,11 +549,15 @@ class Ui_MainWindow(object):
                 continue
             root = self.add_root(constants.resources[i])
             #从constants初始化tree 下拉表单的子表（单板）
+            for j in range(len(constants.resources_dic[constants.resources[i]])):
+                self.add_child(constants.resources_dic[constants.resources[i]][j],j,root)
 
-            # print(constants.resources_dic[constants.resources(i)])
-            # print(len(constants.resources_dic[constants.resources(i)]))
-            # for j in range(len(constants.resources_dic[constants.resources(i)])):
-            #     self.add_child(constants.resources_dic[constants.resources(i)][j],j,root)
+        # 添加提交键监听
+        # self.pushButton.clicked.connect(self.submit_form)
+        self.pushButton.clicked.connect(self.double_check_submit)
+
+
+
 
 
 
@@ -717,7 +714,7 @@ class Ui_MainWindow(object):
         resource_list = constants.resources_dic[resource]  # 获得一串 tablename
 
         for i in resource_list:
-            print(i)
+            # print(i)
             results = quarryDB.quarry_all(i)  # 查询一个table返回所有搜索结果
             self.browse_form(i, results)
 
@@ -752,7 +749,7 @@ class Ui_MainWindow(object):
                 self.tableWidget.setItem(i, j, QTableWidgetItem(results[i][j]))
 
     def check_item(self,item,col):
-        print(self.stackedWidget_1.sender().objectName())
+        # print(self.stackedWidget_1.sender().objectName())
         #勾选逻辑
         if item.checkState(col) == QtCore.Qt.Checked:
             for i in range(item.childCount()):
@@ -761,15 +758,16 @@ class Ui_MainWindow(object):
             flag = [0]
             # print('检查子列结束')
             # print(item.parent().text(col))
-            print(flag)
+            #
+
             if item.parent() != None:
                 for i in range(item.parent().childCount()):
-                    print('检查slibling')
+                    # print('检查slibling')
                     if item.parent().child(i).checkState(col) == QtCore.Qt.Unchecked:
                         flag[0] = 1
-                        print(flag)
+                        # print(flag)
             if flag[0] == 0 and item.parent() != None and item.parent().checkState(col) == QtCore.Qt.Unchecked :
-                print('falg == 0')
+                # print('falg == 0')
 
                 item.parent().setCheckState(col,QtCore.Qt.Checked)
         #取消勾选逻辑 用到2个flag
@@ -785,6 +783,17 @@ class Ui_MainWindow(object):
             if flag1[0] == 0 or flag2:
                 for i in range(item.childCount()):
                     item.child(i).setCheckState(col,QtCore.Qt.Unchecked)
+        #收集check的单板
+
+        hardware = []
+        for i in range(self.treeWidget.topLevelItemCount()):
+            for j in range(self.treeWidget.topLevelItem(i).childCount()):
+                if(self.treeWidget.topLevelItem(i).child(j).checkState(col) == QtCore.Qt.Checked):
+                    hardware.append(self.treeWidget.topLevelItem(i).child(j).text(col))
+        self.selected_hardware  = hardware
+
+
+
     #增加单板选择表中的父节点， 也就是形态表
     def add_root(self, name):
         _translate = QtCore.QCoreApplication.translate
@@ -805,11 +814,44 @@ class Ui_MainWindow(object):
         item_1.setCheckState(0, QtCore.Qt.Unchecked)
         self.treeWidget.topLevelItem(self.treeWidget.topLevelItemCount() - 1).child(index).setText(0, _translate("MainWindow", name))
 
+    def double_check_submit(self):
+        A = QMessageBox.question(self.stackedWidget_1, '确认', '是否确定插入该条目？', QMessageBox.Yes | QMessageBox.No)  # 创建一个二次确认框
+        if A == QMessageBox.Yes:
+            self.submit_form()
+        else:
+            print('cancel')
+
+    def submit_form(self):
+        form = []
+        for i in range(26, 47):
+            text = self.stackedWidget_1.findChild(QLineEdit,"lineEdit_{i}".format(i = i)).text()
+            if text == '':
+                form.append('N/A')
+            else:
+                form.append(text)
+
+
+        for i in self.selected_hardware:
+            print(i, form)
+            insertDB.insert_db(i, form[0], form[1], form[2], form[3], form[4], form[5], form[6], form[7],
+                               form[8], form[9], form[10]
+                               , form[11], form[12], form[13], form[14], form[15], form[16], form[17], form[18],
+                               form[19], form[20])
+
+
+
+
+
+
+
+
+
+
 #必须加入的
 import sys
 
 
-from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
+from PyQt5.QtWidgets import QApplication, QMainWindow, QTableWidgetItem, QLineEdit, QMessageBox
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)

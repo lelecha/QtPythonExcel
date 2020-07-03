@@ -37,7 +37,7 @@ def insert_db(tablename, algo, name, bit, numK
                                                                                                            dpt_person=dpt_person,
                                                                                                            confirmation=confirmation)
 
-    db = sqlite3.connect('test2.db')
+    db = sqlite3.connect('../test2.db')
     cur_insert = db.cursor()
     cur_insert.execute(sql_insert)
     db.commit()
