@@ -18,17 +18,19 @@ def create_table(tablename):
     cur.execute("CREATE TABLE IF NOT EXISTS '{tablename}' ("
                 "id INTEGER PRIMARY KEY AUTOINCREMENT,"
                 "algo varchar(50),"
-                "name varchar(50) NOT NULL,"
+                "name varchar(50),"
+                "algoId char(20),"
+                "subTidN char(20),"
                 "bit char(20),"
                 "numK char(20),"
                 "tidW char(20),"
                 "tidN char(20),"
                 "subTidW char(20),"
-                "subTidN char(20),"
+                
                 "sTypeW_bit varchar(50),"
                 "sType char(20),"
                 "storeLocation varchar(50),"
-                "algoId char(20),"
+                
                 "ISSU char(20),"  # 新加入  好多没有
                 "algoSpe char(20),"
                 "testSpe char(20),"

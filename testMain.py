@@ -50,5 +50,9 @@ def main():
     # insertDB.insert_db('1TCB(5885)','5886 CE(76MB)','TP_OAM_ESEND','160','0','4','0','4','1','8/32','1','片内算法','0','N/A','160','160','单播','index','N/A','N/A','N/A','N/A')
     # insertDB.insert_db('1TCB(5885)','5886 CE(76MB)','MPLS OAM接收表','160','0','4','0','4','1','8/32','2','片内算法','0','N/A','160','160','单播','index','N/A','N/A','N/A','N/A')
 
+
+    # lite3.sqlite3DB.create_table("NE9000 4T(5887)")
+    # lite3.sqlite3DB.create_table("NE9000 1T6D(5886)")
+    # lite3.sqlite3DB.create_table("NE9000 1TM-2TM(5896)")
 if __name__ == '__main__':
     main()
