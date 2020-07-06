@@ -12,7 +12,7 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtGui import QColor, QBrush
 from PyQt5.QtWidgets import QTableWidget
-
+import xlsxOpenpyxl
 import quarryDB
 from pyqt import constants
 import insertDB
@@ -520,8 +520,13 @@ class Ui_MainWindow(object):
         self.verticalLayout_13.setStretch(2, 10)
 
         #注册删除按钮
-        self.pushButton_8.clicked.connect(self.delete)
+        self.pushButton_8.clicked.connect(self.double_check_delete)
 
+        #注册更新键
+        # self.pushButton_9.clicked.connect(self.update)
+
+        #注册导出键
+        self.pushButton_7.clicked.connect(self.search_to_excel)
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -576,7 +581,7 @@ class Ui_MainWindow(object):
         self.pushButton_6.setText(_translate("MainWindow", "搜索"))
         self.pushButton.setText(_translate("MainWindow", "提交"))
         self.label_5.setText(_translate("MainWindow", "检索结果："))
-        self.pushButton_9.setText(_translate("MainWindow", "更新选中条目"))
+        self.pushButton_9.setText(_translate("MainWindow", "保存更改"))
         self.pushButton_8.setText(_translate("MainWindow", "删除选中条目"))
         self.pushButton_7.setText(_translate("MainWindow", "导出到excel"))
 
@@ -773,6 +778,7 @@ class Ui_MainWindow(object):
                                form[8], form[9], form[10]
                                , form[11], form[12], form[13], form[14], form[15], form[16], form[17], form[18],
                                form[19], form[20])
+        self.search()
 
     def search(self):
         self.tableWidget_4.clearContents()
@@ -811,9 +817,9 @@ class Ui_MainWindow(object):
             self.tableWidget_4.setHorizontalHeaderLabels(constants.head_name_search)
             for i in range(len(results)):
                 for j in range(len(results[0])):
-                    print("当前列")
-                    print(j)
-                    print(results[i][j])
+
+
+
                     self.tableWidget_4.setItem(i + preRow, j, QTableWidgetItem(results[i][j]))
                     if j == 0:
                         self.tableWidget_4.setItem(i + preRow, j, QTableWidgetItem(tablename))
@@ -844,10 +850,51 @@ class Ui_MainWindow(object):
             if self.tableWidget_4.item(i,0).isSelected():
                 for j in range(self.tableWidget_4.columnCount()):
                     form.append(self.tableWidget_4.item(i,j).text())
-        deleteDB.delete( form[0], form[1], form[2], form[3], form[4], form[5], form[6], form[7],
-                           form[8], form[9], form[10]
-                           , form[11], form[12], form[13], form[14], form[15], form[16], form[17], form[18],
-                           form[19], form[20],form[21])
+        if len(form) != 0:
+            deleteDB.delete( form[0], form[1], form[2], form[3], form[4], form[5], form[6], form[7],
+                               form[8], form[9], form[10]
+                               , form[11], form[12], form[13], form[14], form[15], form[16], form[17], form[18],
+                               form[19], form[20],form[21])
+
+            self.search()
+        else:
+            print('no item selected')
+    #确认删除
+    def double_check_delete(self):
+        A = QMessageBox.question(self.stackedWidget_1, '确认', '是否确定删除该条目？', QMessageBox.Yes | QMessageBox.No)  # 创建一个二次确认框
+        if A == QMessageBox.Yes:
+            self.delete()
+        else:
+            print('cancel')
+
+    #更新整张表 需要原子性
+    # def update(self):
+    #     form = []
+    #     for i in range(self.tableWidget_4.rowCount()):
+    #         for j in range(self.tableWidget_4.columnCount()):
+    #             form.append(self.tableWidget_4.item(i,j).text())
+    #         if len(form) != 0:
+    #             deleteDB.updata( form[0], form[1], form[2], form[3], form[4], form[5], form[6], form[7],
+    #                                form[8], form[9], form[10]
+    #                                , form[11], form[12], form[13], form[14], form[15], form[16], form[17], form[18],
+    #                                form[19], form[20],form[21])
+
+        #     self.search()
+        # else:
+        #     print('')
+
+    def search_to_excel(self):
+        result = []
+        for i in self.tableWidget_4.rowCount():
+            row = []
+            for j in self.tableWidget_4.columnCount():
+                row.append(self.tableWidget_4.item(i,j).text())
+            result.append(row)
+
+        xlsxOpenpyxl.write_excel_xlsx('','',result)
+
+
+
 
 
 
