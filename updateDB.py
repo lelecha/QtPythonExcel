@@ -1,5 +1,4 @@
 import sqlite3
-import pyqt.UITest4
 
 def update_db(tablename, algo, name, algoId, subTidN, bit, numK
               , tidW, tidN, subTidW, sTypeW_bit, sType, storeLocation, ISSU,algoSpe,

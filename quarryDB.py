@@ -1,5 +1,4 @@
-import pymysql
-import connectDB
+
 import sqlite3
 
 

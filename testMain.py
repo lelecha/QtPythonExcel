@@ -1,12 +1,4 @@
 # -*- coding:utf8 -*-
-import quarryDB
-import xlsxOpenpyxl
-import os
-import deleteDB
-import saveToDB
-import createDB
-import lite3.sqlite3DB
-import insertDB
 def main():
 
    # insertDB.insert_db('blogs','2','22','tom')
